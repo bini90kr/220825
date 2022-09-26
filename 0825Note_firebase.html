@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="https://code.jquery.com/jquery-latest.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-database.js"></script>
+    <title>Welcome to Firebase Hosting</title>
+    <script>
+      const firebaseConfig = {
+        apiKey: "AIzaSyAEGFYd75IR2GnhTXR5gs1bb5Mk4eHFUL0",
+        authDomain: "test0824data.firebaseapp.com",
+        databaseURL: "https://test0824data-default-rtdb.firebaseio.com",
+        projectId: "test0824data",
+        storageBucket: "test0824data.appspot.com",
+        messagingSenderId: "124756214666",
+        appId: "1:124756214666:web:7c2403b68d7707b722fe73"
+      };
+
+      firebase.initializeApp(firebaseConfig);
+      let database = firebase.database();
+
+      $(document).ready(()=>{
+
+        $("#chatList").hide();
+        $("#join").on("click", ()=>{
+          let id = $("#idvalue").val();
+          let pwd = $("#pwdvalue").val();
+          database.ref("members/"+id).set(pwd);
+        })
+        $("#login").on("click", ()=>{
+          let id = $("#idvalue").val();
+          let pwd = $("#pwdvalue").val();
+          database.ref("members/"+id).on("value", (snapshot)=>{
+            if(snapshot.val()){
+              if(pwd==snapshot.val()){
+                alert("로그인 되었습니다.");
+                $("#chatList").show();
+              }else{
+                alert("패스워드가 일치하지 않습니다.");
+              }
+            }else{
+              alert("가입되지 않은 회원입니다.");
+            }
+          });
+        })
+      })
+    </script>
+    <!-- let id ~~~ : idvalue값을 가져와서 id 변수에 넣어줘 -->
+    <!-- 1. 회원가입시 정보 저장 -->
+    <!-- 2. id일치여부, pwd일치여부, 로그인 -->
+    <!-- 3. 로그인 후 대화내용 보이게하기, hide or show -->
+    <!-- 로그인 되었습니다 다음에 loadMsgs(); 이걸 넣어서 불러오기 -->
+  </head>
+  <body>
+    <input type="text" id="idvalue" placeholder="아이디">
+    <input type="text" id="pwdvalue" placeholder="패스워드">
+    <!-- 패스워드에 원래는 text가 아니라 password로 해야함 -->
+    <button id = "join">회원가입</button>
+    <button id = "login">로그인</button>
+
+    <div id="chatList">
+      채팅 내용
+    </div>
+
+  </body>
+</html>
